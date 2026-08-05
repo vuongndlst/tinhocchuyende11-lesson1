@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#f8fbff"/>
+<text x="70" y="70" font-size="34" font-weight="700" fill="#0f172a">Sơ đồ nhanh: quản lí tệp và thư mục</text>
+<g font-family="Arial,sans-serif">
+  <rect x="110" y="150" width="980" height="430" rx="26" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="140" y="190" width="260" height="340" rx="18" fill="#dbeafe" stroke="#0ea5e9" stroke-width="3"/>
+  <text x="270" y="235" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Thao tác thường gặp</text>
+  <text x="175" y="290" font-size="22" fill="#0f172a">• Tạo thư mục mới</text>
+  <text x="175" y="335" font-size="22" fill="#0f172a">• Đổi tên tệp</text>
+  <text x="175" y="380" font-size="22" fill="#0f172a">• Sao chép</text>
+  <text x="175" y="425" font-size="22" fill="#0f172a">• Di chuyển</text>
+  <text x="175" y="470" font-size="22" fill="#0f172a">• Xóa / khôi phục</text>
+
+  <rect x="460" y="190" width="280" height="340" rx="18" fill="#dcfce7" stroke="#22c55e" stroke-width="3"/>
+  <text x="600" y="235" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Nguyên tắc</text>
+  <text x="490" y="290" font-size="21" fill="#0f172a">• Sao chép: giữ bản gốc</text>
+  <text x="490" y="335" font-size="21" fill="#0f172a">• Di chuyển: đổi vị trí</text>
+  <text x="490" y="380" font-size="21" fill="#0f172a">• Nháy phải: menu ngữ cảnh</text>
+  <text x="490" y="425" font-size="21" fill="#0f172a">• Mở bằng ứng dụng phù hợp</text>
+  <text x="490" y="470" font-size="21" fill="#0f172a">• Khôi phục từ Thùng rác nếu còn</text>
+
+  <rect x="800" y="190" width="260" height="340" rx="18" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+  <text x="930" y="235" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Ví dụ</text>
+  <text x="825" y="300" font-size="20" fill="#0f172a">Documents/</text>
+  <text x="845" y="340" font-size="20" fill="#0f172a">HeDieuHanh/</text>
+  <text x="870" y="380" font-size="20" fill="#0f172a">LyThuyet/</text>
+  <text x="870" y="420" font-size="20" fill="#0f172a">ThucHanh/</text>
+  <text x="825" y="480" font-size="18" fill="#475569">Cấu trúc rõ ràng giúp tìm dữ liệu nhanh hơn.</text>
+</g></svg>

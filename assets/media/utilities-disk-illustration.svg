@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#f8fbff"/>
+<text x="70" y="70" font-size="34" font-weight="700" fill="#0f172a">Tiện ích hệ điều hành: hiểu đúng vai trò</text>
+<g>
+  <circle cx="360" cy="390" r="190" fill="#dbeafe" stroke="#0ea5e9" stroke-width="4"/>
+  <circle cx="360" cy="390" r="145" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <circle cx="360" cy="390" r="100" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <circle cx="360" cy="390" r="55" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <path d="M360 200 L360 580 M170 390 L550 390 M225 255 L495 525 M495 255 L225 525" stroke="#94a3b8" stroke-width="2"/>
+  <path d="M360 390 L530 310" stroke="#f59e0b" stroke-width="18" stroke-linecap="round"/>
+  <path d="M360 390 L260 500" stroke="#22c55e" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="360" cy="390" r="26" fill="#0f172a"/>
+  <text x="320" y="620" font-size="20" fill="#475569">Sơ đồ minh họa dữ liệu trên ổ đĩa</text>
+
+  <rect x="650" y="180" width="420" height="420" rx="26" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="860" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#0f172a">Nhớ điều này</text>
+  <text x="700" y="295" font-size="22" fill="#0f172a">• Check / Scan: kiểm tra, phát hiện lỗi.</text>
+  <text x="700" y="345" font-size="22" fill="#0f172a">• Repair: minh họa sửa lỗi logic.</text>
+  <text x="700" y="395" font-size="22" fill="#0f172a">• Optimize: tổ chức lại dữ liệu.</text>
+  <text x="700" y="465" font-size="22" fill="#0f172a">• Đây là mô phỏng giáo dục,</text>
+  <text x="720" y="500" font-size="22" fill="#0f172a">không thay đổi ổ đĩa thật.</text>
+  <text x="700" y="560" font-size="20" fill="#475569">Hợp mảnh không nên được áp dụng máy móc cho mọi loại ổ đĩa.</text>
+</g></svg>

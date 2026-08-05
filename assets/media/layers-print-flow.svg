@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#f8fbff"/>
+<text x="70" y="70" font-size="34" font-weight="700" fill="#0f172a">Ví dụ luồng xử lí: Mở tệp dữ liệu</text>
+<text x="70" y="110" font-size="20" fill="#475569">Ứng dụng sử dụng dịch vụ của hệ điều hành để tìm kiếm và mở tệp trong bộ nhớ ngoài.</text>
+<g font-family="Arial,sans-serif">
+  <rect x="90" y="240" width="220" height="130" rx="24" fill="#dbeafe" stroke="#0ea5e9" stroke-width="3"/><text x="200" y="310" text-anchor="middle" font-size="28" font-weight="700">1. Người dùng</text><text x="200" y="340" text-anchor="middle" font-size="18">Chọn mở tệp</text>
+  <rect x="360" y="240" width="220" height="130" rx="24" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/><text x="470" y="310" text-anchor="middle" font-size="28" font-weight="700">2. Ứng dụng</text><text x="470" y="340" text-anchor="middle" font-size="18">Yêu cầu mở tệp</text>
+  <rect x="630" y="240" width="220" height="130" rx="24" fill="#dcfce7" stroke="#22c55e" stroke-width="3"/><text x="740" y="310" text-anchor="middle" font-size="28" font-weight="700">3. Hệ điều hành</text><text x="740" y="340" text-anchor="middle" font-size="18">Tìm kiếm và mở tệp</text>
+  <rect x="900" y="240" width="220" height="130" rx="24" fill="#fee2e2" stroke="#ef4444" stroke-width="3"/><text x="1010" y="310" text-anchor="middle" font-size="28" font-weight="700">4. Bộ nhớ ngoài</text><text x="1010" y="340" text-anchor="middle" font-size="18">Đọc dữ liệu</text>
+  <path d="M310 305 L360 305" stroke="#0ea5e9" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M580 305 L630 305" stroke="#0ea5e9" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M850 305 L900 305" stroke="#0ea5e9" stroke-width="5" marker-end="url(#a)"/>
+  <rect x="250" y="470" width="700" height="120" rx="26" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="600" y="520" text-anchor="middle" font-size="24" font-weight="700" fill="#0f172a">Thông điệp cốt lõi</text>
+  <text x="600" y="560" text-anchor="middle" font-size="20" fill="#475569">Hệ điều hành là môi trường để phần mềm ứng dụng khai thác hiệu quả phần cứng.</text>
+</g>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0ea5e9"/></marker></defs></svg>

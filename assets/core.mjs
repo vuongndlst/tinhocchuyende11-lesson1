@@ -12,8 +12,16 @@ export function createInitialProgress() {
     quizBestScore: 0,
     quizAttempts: 0,
     certificate: null,
-    settings: { theme: 'light', reducedMotion: false, largeText: false, unlockAll: false },
+    learner: { name: '', className: '', role: '', avatar: '' },
+    learningChecks: {},
+    openedChests: {},
+    rewards: [],
+    settings: { theme: 'light', reducedMotion: false, largeText: false, unlockAll: false, sound: true },
   }
+}
+
+export function hasLearnerProfile(state) {
+  return Boolean(state?.learner?.name?.trim() && state?.learner?.className?.trim())
 }
 
 export function getLevel(xp) {
@@ -84,14 +92,25 @@ export function validateProgress(value) {
 }
 
 export function loadProgress() {
-  if (typeof localStorage === 'undefined') return createInitialProgress()
+  const initial = createInitialProgress()
+  if (typeof localStorage === 'undefined') return initial
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return createInitialProgress()
+    if (!raw) return initial
     const parsed = JSON.parse(raw)
-    return validateProgress(parsed) ? parsed : createInitialProgress()
+    if (!validateProgress(parsed)) return initial
+    return {
+      ...initial,
+      ...parsed,
+      missions: { ...initial.missions, ...parsed.missions },
+      learner: { ...initial.learner, ...(parsed.learner || {}) },
+      learningChecks: parsed.learningChecks || {},
+      openedChests: parsed.openedChests || {},
+      rewards: parsed.rewards || [],
+      settings: { ...initial.settings, ...parsed.settings },
+    }
   } catch {
-    return createInitialProgress()
+    return initial
   }
 }
 

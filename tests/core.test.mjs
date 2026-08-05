@@ -4,6 +4,7 @@ import { missions } from '../assets/missions.mjs'
 import { questions } from '../assets/questions.mjs'
 import {
   createInitialProgress,
+  hasLearnerProfile,
   isMissionUnlocked,
   completeMissionState,
   canIssueCertificate,
@@ -41,7 +42,10 @@ test('điều kiện chứng chỉ', () => {
 
 test('chấm câu hỏi một và nhiều đáp án', () => {
   const quiz = [questions[0], questions[2]]
-  const answers = { [questions[0].id]: [0], [questions[2].id]: [0, 1, 2] }
+  const answers = {
+    [questions[0].id]: [...questions[0].correct],
+    [questions[2].id]: [...questions[2].correct],
+  }
   assert.equal(calculateQuizPercent(quiz, answers), 100)
 })
 
@@ -58,4 +62,14 @@ test('mã chứng chỉ đúng định dạng', () => {
 test('từ chối tiến trình nhập thiếu trường bắt buộc', () => {
   assert.equal(validateProgress({ totalXp: 20 }), false)
   assert.equal(validateProgress(createInitialProgress()), true)
+})
+
+
+test('bắt buộc có họ tên và lớp trước khi học', () => {
+  const state = createInitialProgress()
+  assert.equal(hasLearnerProfile(state), false)
+  state.learner.name = 'Nguyễn Minh An'
+  assert.equal(hasLearnerProfile(state), false)
+  state.learner.className = '11A1'
+  assert.equal(hasLearnerProfile(state), true)
 })

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#f8fbff"/>
+<text x="70" y="70" font-size="34" font-weight="700" fill="#0f172a">Hệ điều hành di động: điểm khác biệt nổi bật</text>
+<g>
+  <rect x="170" y="120" width="320" height="520" rx="42" fill="#0f172a"/>
+  <rect x="195" y="165" width="270" height="390" rx="24" fill="#dbeafe"/>
+  <circle cx="330" cy="595" r="22" fill="#334155"/>
+  <rect x="250" y="210" width="70" height="70" rx="20" fill="#ffffff"/>
+  <rect x="340" y="210" width="70" height="70" rx="20" fill="#ffffff"/>
+  <rect x="250" y="300" width="70" height="70" rx="20" fill="#ffffff"/>
+  <rect x="340" y="300" width="70" height="70" rx="20" fill="#ffffff"/>
+  <rect x="250" y="390" width="160" height="60" rx="18" fill="#ffffff"/>
+  <text x="330" y="515" text-anchor="middle" font-size="22" fill="#0f172a">Chạm · Vuốt · Kéo</text>
+
+  <rect x="580" y="150" width="460" height="460" rx="26" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="810" y="205" text-anchor="middle" font-size="28" font-weight="700" fill="#0f172a">Các đặc điểm chính</text>
+  <text x="620" y="270" font-size="22" fill="#0f172a">• Tối ưu cho cảm ứng và cảm biến.</text>
+  <text x="620" y="325" font-size="22" fill="#0f172a">• Hỗ trợ Wi‑Fi, Bluetooth, 4G/5G, NFC.</text>
+  <text x="620" y="380" font-size="22" fill="#0f172a">• Tích hợp Danh bạ, Lịch, Nhắc việc.</text>
+  <text x="620" y="435" font-size="22" fill="#0f172a">• Quản lí ứng dụng và quyền truy cập.</text>
+  <text x="620" y="510" font-size="22" fill="#0f172a">Hệ điều hành phổ biến:</text>
+  <text x="650" y="550" font-size="22" fill="#0f172a">Android · iOS</text>
+</g></svg>
