@@ -83,14 +83,23 @@ export const bossStations = [
 ]
 
 export const mission1Items = [
-  ['Điều phối CPU', 'program'],
-  ['Quản lí RAM', 'device'],
-  ['Nhận tín hiệu bàn phím', 'device'],
-  ['Tạo thư mục', 'data'],
-  ['Mở chương trình', 'program'],
-  ['Hiển thị cửa sổ', 'interface'],
-  ['Kết nối máy in', 'device'],
-  ['Nén tệp', 'utility'],
+  ['Phân chia thời gian CPU cho các chương trình đang chạy', 'program'],
+  ['Quản lí bộ nhớ chính (RAM) để hệ thống sử dụng', 'device'],
+  ['Tiếp nhận dữ liệu từ bàn phím', 'device'],
+  ['Tạo thư mục để tổ chức tệp', 'data'],
+  ['Nạp và tổ chức thực hiện một chương trình', 'program'],
+  ['Hiển thị cửa sổ, biểu tượng và con trỏ', 'interface'],
+  ['Tự động nhận biết máy in mới bằng Plug & Play', 'device'],
+  ['Nén nhiều tệp thành gói .zip', 'utility'],
+]
+
+export const mission1Categories = [
+  ['', 'Chọn nhóm chức năng'],
+  ['device', 'Quản lí thiết bị, CPU và bộ nhớ'],
+  ['data', 'Quản lí lưu trữ dữ liệu'],
+  ['program', 'Tổ chức chương trình và điều phối tài nguyên'],
+  ['interface', 'Cung cấp môi trường giao tiếp với người dùng'],
+  ['utility', 'Cung cấp tiện ích hệ thống'],
 ]
 
 export const windowsTimeline = [

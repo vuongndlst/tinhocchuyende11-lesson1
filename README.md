@@ -155,3 +155,11 @@ Website dùng hash routing (`#/mission/1`, `#/quiz`...), vì vậy không xảy 
 - Dữ liệu câu hỏi hoạt động được tập trung tại `assets/activity-data.mjs`.
 - Kiểm tra chất lượng nội dung nằm tại `tests/content-audit.test.mjs`.
 - Báo cáo rà soát chi tiết: `KIEM_TRA_CAU_HOI_DAP_AN.md`.
+
+## Cập nhật V7.3
+
+- Sửa lỗi/nút thắt tại nhiệm vụ **Trung tâm điều hành**.
+- Viết lại hai mục dễ gây nhầm giữa quản lí bộ nhớ vật lí và điều phối tài nguyên cho chương trình.
+- Hiển thị phản hồi đúng/sai theo từng dòng.
+- Sau hai lần kiểm tra, hệ thống chỉ rõ nhóm chức năng đúng của các mục còn sai.
+- Bổ sung kiểm thử tự động xác nhận đủ 8 mục và đúng phạm vi chấm.

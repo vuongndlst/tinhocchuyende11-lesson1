@@ -1,7 +1,7 @@
-import { missions, badges, levels } from './missions.mjs'
-import { questions } from './questions.mjs'
-import { theorySections, getTheoryForMission } from './theory.mjs'
-import { dailyChallenges, bossStations, mission1Items, windowsTimeline, mission3Targets, mission4LayerCards, mission6UtilityMatches, mission7Features } from './activity-data.mjs'
+import { missions, badges, levels } from './missions.mjs?v=7.4.0'
+import { questions } from './questions.mjs?v=7.4.0'
+import { theorySections, getTheoryForMission } from './theory.mjs?v=7.4.0'
+import { dailyChallenges, bossStations, mission1Items, mission1Categories, windowsTimeline, mission3Targets, mission4LayerCards, mission6UtilityMatches, mission7Features } from './activity-data.mjs?v=7.4.0'
 import {
   createInitialProgress,
   hasLearnerProfile,
@@ -18,7 +18,7 @@ import {
   saveProgress,
   validateProgress,
   STORAGE_KEY,
-} from './core.mjs'
+} from './core.mjs?v=7.4.0'
 
 let progress = loadProgress()
 progress.learner ||= { name: '', className: '', role: '', avatar: '' }
@@ -78,6 +78,12 @@ function showToast(message) {
   toast.classList.add('show')
   clearTimeout(showToast.timer)
   showToast.timer = setTimeout(() => toast.classList.remove('show'), 3200)
+}
+
+
+function cleanupTransientUi() {
+  document.querySelectorAll('#missionCompleteOverlay, .cutscene-overlay, .celebration-burst').forEach((element) => element.remove())
+  document.body.classList.remove('modal-open')
 }
 
 function queueCelebration(title, emoji = '✨') {
@@ -279,15 +285,6 @@ function bindGlobalInteractions(route) {
   })
   document.querySelector('#coachToggle')?.addEventListener('click', () => document.querySelector('#coachPanel')?.classList.toggle('open'))
   document.querySelector('#closeCoach')?.addEventListener('click', () => document.querySelector('#coachPanel')?.classList.remove('open'))
-  document.querySelector('#beginMissionChapter')?.addEventListener('click', () => {
-    const button = document.querySelector('#beginMissionChapter')
-    const missionId = Number(button.dataset.missionId)
-    progress.learningChecks[`cutscene-${missionId}`] = true
-    persist()
-    playSound('start')
-    document.querySelector('#missionCutscene')?.classList.add('closing')
-    setTimeout(() => document.querySelector('#missionCutscene')?.remove(), 360)
-  })
 }
 
 function shell(content, route) {
@@ -313,7 +310,7 @@ function shell(content, route) {
       <div class="main-column">
         <header class="topbar"><div><strong>${progress.totalXp} XP</strong><span class="topbar-level"> · ${esc(level.name)}</span></div><div class="top-actions"><button class="icon-button" id="themeToggle" aria-label="Đổi chế độ sáng tối">${progress.settings.theme === 'light' ? '🌙' : '☀️'}</button><button class="icon-button" id="textToggle" aria-label="Bật chữ lớn">A+</button><button class="icon-button" id="soundToggle" aria-label="Bật hoặc tắt âm thanh">${progress.settings.sound ? '🔊' : '🔈'}</button><a class="button button-small button-ghost" href="#/progress">Tiến trình</a></div></header>
         <main id="main-content" class="content">${content}</main>
-        <footer class="site-footer"><span>OS Quest 11 · Giáo viên: Nguyễn Đình Vương</span><span><a href="#/sources">Nguồn học liệu</a> · <a href="#/privacy">Quyền riêng tư</a></span></footer>
+        <footer class="site-footer"><span>OS Quest 11 V7.4 · Giáo viên: Nguyễn Đình Vương</span><span><a href="#/sources">Nguồn học liệu</a> · <a href="#/privacy">Quyền riêng tư</a></span></footer>
       </div>
     </div>
     ${(() => { const coach = getRouteCoach(route); return `<button class="coach-toggle" id="coachToggle" aria-label="Mở trợ lý học tập">${coach.icon}</button><aside class="coach-panel" id="coachPanel"><button id="closeCoach" aria-label="Đóng">×</button><strong>${coach.title}</strong><p>${coach.text}</p></aside>` })()}`
@@ -363,19 +360,50 @@ function renderTheoryBeforeMission(id) {
   </section>`
 }
 
+function renderMissionLanding(id) {
+  const mission = missions[id]
+  const stage = CAMPAIGN_STAGES.find((item) => item.id === id)
+  const completed = missions.filter((item) => progress.missions[item.id]?.completed).length
+  const theory = getTheoryForMission(id)
+  const content = `<div class="stage-landing-page">
+    <section class="stage-landing-hero card">
+      <div class="stage-landing-copy">
+        <span class="eyebrow">CHẶNG ${id + 1}/8 · LANDING PAGE</span>
+        <h1>${esc(stage?.title || mission.title)}</h1>
+        <p>${esc(stage?.story || mission.subtitle)}</p>
+        <div class="stage-landing-meta"><span>${mission.icon} ${esc(mission.title)}</span><span>⏱ ${mission.estimatedMinutes} phút</span><span>⚡ +${mission.xp} XP</span><span>📈 Đã xong ${completed}/8</span></div>
+        <div class="hero-actions"><button class="button" id="enterMissionStage" data-stage-id="${id}">Bắt đầu chặng ${id + 1} →</button><a class="button button-ghost" href="#/">Về bản đồ</a></div>
+      </div>
+      <div class="stage-landing-mascot"><img src="assets/media/byte-mascot.svg" alt="Mascot Byte"><blockquote>“${id === 0 ? 'Hãy giúp tớ khôi phục những chức năng đầu tiên của hệ thống.' : 'Module mới đã xuất hiện. Hãy đọc tín hiệu và hoàn thành nhiệm vụ.'}”</blockquote></div>
+    </section>
+    <section class="stage-landing-grid">
+      <article class="card"><span class="stage-card-icon">🎯</span><h2>Mục tiêu</h2><p>${esc(mission.subtitle)}</p></article>
+      <article class="card"><span class="stage-card-icon">📘</span><h2>Kiến thức cần dùng</h2><p>${esc(theory?.summary || 'Đọc phần học nhanh trước khi thực hành.')}</p></article>
+      <article class="card"><span class="stage-card-icon">🎁</span><h2>Phần thưởng</h2><p>Nhận ${mission.xp} XP, sao nhiệm vụ và tiến gần hơn tới rương thưởng.</p></article>
+    </section>
+  </div>`
+  shell(content, `/mission/${id}`)
+  document.querySelector('#enterMissionStage')?.addEventListener('click', () => {
+    progress.learningChecks[`stage-landing-${id}`] = true
+    progress.learningChecks[`cutscene-${id}`] = true
+    persist()
+    playSound('start')
+    renderRoute()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  })
+}
+
 function missionHeader(id, body) {
   const mission = missions[id]
   const missionState = progress.missions[id]
   const done = missionState?.completed
   const completed = missions.filter((item) => progress.missions[item.id]?.completed).length
   const stage = CAMPAIGN_STAGES.find((item) => item.id === id)
-  const cutsceneSeen = Boolean(progress.learningChecks[`cutscene-${id}`])
   const stars = getMissionStars(missionState)
   const nextMissionId = getNextUnlockedMissionId(id)
   const nextMission = nextMissionId !== null ? missions.find((item) => item.id === nextMissionId) : null
-  const nextStepCard = done ? `<section class="card mission-next-step" id="nextMissionStep"><div class="mission-next-step__icon">🚀</div><div class="mission-next-step__content"><span class="eyebrow">BƯỚC TIẾP THEO</span><h2>${nextMission ? `Sẵn sàng qua nhiệm vụ ${nextMission.id}: ${esc(nextMission.title)}` : 'Em đã hoàn thành chặng nhiệm vụ này!'}</h2><p>${nextMission ? 'Em có thể đi tiếp ngay để giữ mạch học tập. Nếu muốn, hãy xem lại bản đồ hoặc thử thách cuối.' : 'Tất cả nhiệm vụ chính đã xong. Đây là lúc em bước vào Boss Stage hoặc quay lại ôn tập.'}</p><div class="hero-actions mission-next-actions">${nextMission ? `<a class="button" href="#/mission/${nextMission.id}">Qua nhiệm vụ kế tiếp →</a>` : '<a class="button" href="#/final">Vào Boss Stage →</a>'}<a class="button button-ghost" href="#/">Về bản đồ nhiệm vụ</a></div></div></section>` : ''
-  const cutscene = cutsceneSeen ? '' : `<div class="cutscene-overlay" id="missionCutscene"><section class="cutscene-card"><div class="cutscene-scene"><img src="assets/media/byte-mascot.svg" alt="Mascot Byte"><span class="cutscene-chapter">CHƯƠNG ${id + 1}/8</span></div><div class="cutscene-dialogue"><span class="eyebrow">BYTE TRANSMISSION</span><h1>${esc(stage?.title || mission.title)}</h1><p>${esc(stage?.story || mission.subtitle)}</p><blockquote>“${id === 0 ? 'Trước tiên, em cần hiểu vì sao hệ điều hành giữ cả hệ thống hoạt động.' : 'Module tiếp theo đã xuất hiện. Hãy đọc dữ kiện, quan sát tín hiệu và hoàn thành thử thách.'}”</blockquote><button class="button" id="beginMissionChapter" data-mission-id="${id}">Bắt đầu chương ${id + 1} →</button></div></section></div>`
-  return `${cutscene}<section class="mission-page mission-page-plus">
+  const nextStepCard = done ? `<section class="card mission-next-step" id="nextMissionStep"><div class="mission-next-step__icon">🚀</div><div class="mission-next-step__content"><span class="eyebrow">BƯỚC TIẾP THEO</span><h2>${nextMission ? `Sẵn sàng qua nhiệm vụ ${nextMission.id}: ${esc(nextMission.title)}` : 'Em đã hoàn thành chặng nhiệm vụ này!'}</h2><p>${nextMission ? 'Em có thể đi tiếp ngay để giữ mạch học tập. Chặng mới sẽ mở bằng một landing page ngắn trước khi vào nhiệm vụ.' : 'Tất cả nhiệm vụ chính đã xong. Đây là lúc em bước vào Boss Stage hoặc quay lại ôn tập.'}</p><div class="hero-actions mission-next-actions">${nextMission ? `<a class="button" href="#/mission/${nextMission.id}">Qua nhiệm vụ kế tiếp →</a>` : '<a class="button" href="#/final">Vào Boss Stage →</a>'}<a class="button button-ghost" href="#/">Về bản đồ nhiệm vụ</a></div></div></section>` : ''
+  return `<section class="mission-page mission-page-plus">
     <div class="mission-hero card mission-hero-plus"><div class="mission-icon">${mission.icon}</div><div><span class="eyebrow">NHIỆM VỤ ${id}</span><h1>${esc(mission.title)}</h1><p>${esc(mission.subtitle)}</p><div class="chip-row"><span class="chip">+${mission.xp} XP</span><span class="chip">${mission.estimatedMinutes} phút</span><span class="chip">Tiến độ ${completed}/8</span>${done ? '<span class="chip chip-success">Đã hoàn thành</span>' : ''}</div>${done ? `<div class="mission-star-result"><span>Kết quả:</span>${renderStars(stars)}</div>` : ''}</div></div>
     <section class="mission-story-banner card"><img src="assets/media/byte-mascot.svg" alt="Mascot Byte"><div><span class="eyebrow">CHƯƠNG TRUYỆN</span><h2>${esc(stage?.title || 'Nhiệm vụ')}</h2><p>${esc(stage?.story || 'Hãy hoàn thành thử thách này để tiến sâu hơn trong hành trình.')}</p></div></section>
     <section class="mission-brief-grid">
@@ -426,10 +454,28 @@ function showMissionCompleteFlow(id, score, first, hasChest) {
     <div class="mission-complete-secondary"><button class="button button-ghost" type="button" data-stay-current>Ở lại xem kết quả</button><a class="button button-ghost" href="#/">Về bản đồ</a></div>
   </section>`
   document.body.append(overlay)
+  document.body.classList.add('modal-open')
   requestAnimationFrame(() => overlay.classList.add('show'))
-  overlay.querySelector('[data-continue-next]')?.addEventListener('click', () => playSound('start'))
+  overlay.querySelector('[data-continue-next]')?.addEventListener('click', (event) => {
+    event.preventDefault()
+    playSound('start')
+    overlay.classList.remove('show')
+    document.body.classList.remove('modal-open')
+    setTimeout(() => {
+      overlay.remove()
+      if (location.hash === destination) renderRoute()
+      else location.hash = destination
+    }, 180)
+  })
+  overlay.querySelector('.mission-complete-secondary a[href="#/"]')?.addEventListener('click', (event) => {
+    event.preventDefault()
+    overlay.remove()
+    document.body.classList.remove('modal-open')
+    location.hash = '#/'
+  })
   overlay.querySelectorAll('[data-stay-current]').forEach((button) => button.addEventListener('click', () => {
     overlay.classList.remove('show')
+    document.body.classList.remove('modal-open')
     setTimeout(() => {
       overlay.remove()
       document.querySelector('#nextMissionStep')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -621,15 +667,65 @@ function renderMission0() {
 
 function renderMission1() {
   const items = mission1Items
-  const categories = [['','Chọn nhóm chức năng'],['device','Quản lí thiết bị'],['data','Quản lí dữ liệu'],['program','Chương trình và tài nguyên'],['interface','Giao tiếp người dùng'],['utility','Tiện ích hệ thống']]
-  const rows = items.map(([name], index) => `<label class="match-row"><strong>${esc(name)}</strong><select data-index="${index}">${categories.map(([value,label]) => `<option value="${value}">${label}</option>`).join('')}</select></label>`).join('')
-  const body = `<div class="card lesson-note">Hệ điều hành có năm nhóm chức năng chính. Chọn nhóm phù hợp cho từng công việc.</div><div class="card activity-card"><h2>Phân loại chức năng</h2><div class="matching-list">${rows}</div><button class="button" id="checkM1">Chấm kết quả</button><div id="m1Feedback"></div></div>`
+  const categories = mission1Categories
+  const rows = items.map(([name, correct], index) => `<label class="match-row" data-match-row="${index}"><strong>${esc(name)}</strong><select data-index="${index}" data-correct="${correct}" aria-label="Phân loại: ${esc(name)}">${categories.map(([value,label]) => `<option value="${value}">${esc(label)}</option>`).join('')}</select><small class="match-row-feedback" aria-live="polite"></small></label>`).join('')
+  const categoryLegend = [
+    ['device', 'Thiết bị, CPU và bộ nhớ', 'CPU, RAM, bàn phím, máy in và Plug & Play.'],
+    ['data', 'Lưu trữ dữ liệu', 'Tệp, thư mục và cách tổ chức dữ liệu.'],
+    ['program', 'Chương trình và tài nguyên', 'Nạp, chạy chương trình và phân chia CPU cho tiến trình.'],
+    ['interface', 'Giao tiếp người dùng', 'Cửa sổ, biểu tượng, con trỏ và giao diện.'],
+    ['utility', 'Tiện ích hệ thống', 'Nén tệp, kiểm tra ổ đĩa và các công cụ hỗ trợ.'],
+  ]
+  const body = `<div class="card lesson-note"><strong>Quy tắc phân loại:</strong> Trong tài liệu của bài học, CPU và RAM được xếp vào nhóm <em>quản lí thiết bị</em>; còn việc phân chia thời gian CPU cho chương trình đang chạy thuộc nhóm <em>tổ chức chương trình và điều phối tài nguyên</em>.</div><section class="function-category-legend">${categoryLegend.map(([key,title,note]) => `<article class="card category-legend-card" data-category-key="${key}"><strong>${esc(title)}</strong><p>${esc(note)}</p></article>`).join('')}</section><div class="card activity-card"><h2>Phân loại chức năng</h2><p>Chọn nhóm phù hợp cho từng tình huống. Khi bấm chấm, hệ thống chỉ rõ ngay từng mục đúng hoặc cần sửa.</p><div class="matching-list" id="mission1Matching">${rows}</div><div class="hero-actions"><button class="button" id="checkM1">Chấm kết quả</button><button class="button button-ghost" id="resetM1" type="button">Xóa lựa chọn</button></div><div id="m1Feedback"></div></div>`
   shell(missionHeader(1, body), '/mission/1'); bindMissionReset(1)
+  const matching = document.querySelector('#mission1Matching')
+  const selects = [...matching.querySelectorAll('select[data-index]')]
+  const categoryLabel = (value) => categories.find(([key]) => key === value)?.[1] || ''
+
+  selects.forEach((select) => select.addEventListener('change', () => {
+    const row = select.closest('[data-match-row]')
+    row.classList.remove('match-correct', 'match-wrong')
+    row.querySelector('.match-row-feedback').textContent = ''
+    document.querySelector('#m1Feedback').innerHTML = ''
+  }))
+
+  document.querySelector('#resetM1').addEventListener('click', () => {
+    selects.forEach((select) => { select.value = '' })
+    matching.querySelectorAll('[data-match-row]').forEach((row) => {
+      row.classList.remove('match-correct', 'match-wrong')
+      row.querySelector('.match-row-feedback').textContent = ''
+    })
+    document.querySelector('#m1Feedback').innerHTML = ''
+  })
+
   document.querySelector('#checkM1').addEventListener('click', () => {
-    const selects = [...document.querySelectorAll('select[data-index]')]
-    const score = selects.filter((select) => select.value === items[Number(select.dataset.index)][1]).length
-    document.querySelector('#m1Feedback').innerHTML = score === items.length ? '<div class="feedback feedback-success">Đúng 8/8. Năm nhóm chức năng đã được kích hoạt.</div>' : `<div class="feedback feedback-warning">Đúng ${score}/8. Gợi ý: CPU thuộc điều phối chương trình; RAM và thiết bị ngoại vi thuộc quản lí thiết bị; nén tệp là tiện ích.</div>`
-    if (score === items.length) setTimeout(() => finishMission(1), 500)
+    let score = 0
+    const wrongNames = []
+    let firstWrong = null
+    selects.forEach((select) => {
+      const index = Number(select.dataset.index)
+      const expected = select.dataset.correct
+      const correct = select.value === expected
+      const row = select.closest('[data-match-row]')
+      const feedback = row.querySelector('.match-row-feedback')
+      row.classList.toggle('match-correct', correct)
+      row.classList.toggle('match-wrong', !correct)
+      if (correct) {
+        score += 1
+        feedback.textContent = '✓ Chính xác'
+      } else {
+        firstWrong ||= select
+        wrongNames.push(items[index][0])
+        feedback.innerHTML = `${select.value ? 'Chưa đúng.' : 'Chưa chọn.'} <strong>Đáp án đúng: ${esc(categoryLabel(expected))}</strong>`
+      }
+    })
+    if (score === items.length) {
+      document.querySelector('#m1Feedback').innerHTML = '<div class="feedback feedback-success"><strong>Đúng 8/8.</strong> Năm nhóm chức năng đã được kích hoạt. Em có thể qua nhiệm vụ kế tiếp.</div>'
+      setTimeout(() => finishMission(1), 500)
+    } else {
+      document.querySelector('#m1Feedback').innerHTML = `<div class="feedback feedback-warning"><strong>Đúng ${score}/8.</strong> Hãy sửa ${items.length - score} mục đang có viền cam. Hai mục thường bị nhầm là <strong>phân chia thời gian CPU</strong> và <strong>máy in Plug & Play</strong>.</div>`
+      firstWrong?.focus()
+    }
   })
 }
 
@@ -937,11 +1033,17 @@ function renderSources() {
 function renderPrivacy() {shell('<article class="card text-page"><span class="eyebrow">QUYỀN RIÊNG TƯ</span><h1>Dữ liệu được sử dụng như thế nào?</h1><p>OS Quest 11 không yêu cầu camera, microphone hoặc số điện thoại thật. Các mô phỏng sử dụng dữ liệu ảo.</p><h2>Lưu cục bộ</h2><p>Họ tên, lớp, tiến trình, XP, huy hiệu, điểm và chứng chỉ được lưu trong localStorage trên trình duyệt. Họ tên và lớp là thông tin bắt buộc để vào hệ thống; người học có thể xóa toàn bộ dữ liệu trong trang Tiến trình.</p><h2>Học liệu bên ngoài</h2><p>Ảnh từ Wikimedia Commons được tải từ máy chủ bên ngoài. Trình phát YouTube chỉ được tải sau khi người học bấm phát video; khi đó chính sách dữ liệu của YouTube có thể được áp dụng.</p><h2>Supabase tùy chọn</h2><p>Dự án có sẵn biến môi trường để nhà trường tích hợp Supabase sau khi xây dựng schema và chính sách RLS. Website cơ bản không phụ thuộc máy chủ.</p></article>','/privacy')}
 
 function renderRoute() {
+  cleanupTransientUi()
   applySettings()
   const route=(location.hash.slice(1)||'/').split('?')[0]
   if (!hasLearnerProfile(progress)) { renderEntryGate(); return }
   if(route==='/')return renderDashboard()
-  if(route.startsWith('/mission/')){const id=Number(route.split('/').pop());if(!Number.isInteger(id)||id<0||id>7||!isMissionUnlocked(progress,id)){location.hash='#/';return}return [renderMission0,renderMission1,renderMission2,renderMission3,renderMission4,renderMission5,renderMission6,renderMission7][id]()}
+  if(route.startsWith('/mission/')){
+    const id=Number(route.split('/').pop())
+    if(!Number.isInteger(id)||id<0||id>7||!isMissionUnlocked(progress,id)){location.hash='#/';return}
+    if(!progress.learningChecks[`stage-landing-${id}`]) return renderMissionLanding(id)
+    return [renderMission0,renderMission1,renderMission2,renderMission3,renderMission4,renderMission5,renderMission6,renderMission7][id]()
+  }
   if(route==='/theory')return renderTheory()
   if(route==='/final')return renderFinal()
   if(route==='/quiz')return renderQuiz()
@@ -952,5 +1054,5 @@ function renderRoute() {
   shell('<div class="gate-page card"><span class="gate-icon">404</span><h1>Không tìm thấy trang</h1><a class="button" href="#/">Về trang chủ</a></div>',route)
 }
 
-window.addEventListener('hashchange',()=>{window.scrollTo({top:0});renderRoute()})
+window.addEventListener('hashchange',()=>{cleanupTransientUi();window.scrollTo({top:0});renderRoute()})
 applySettings();renderRoute()

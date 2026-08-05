@@ -7,6 +7,7 @@ import {
   dailyChallenges,
   bossStations,
   mission1Items,
+  mission1Categories,
   windowsTimeline,
   mission3Targets,
   mission4LayerCards,
@@ -96,6 +97,19 @@ test('câu khởi động và Boss Stage có khóa đáp án hợp lệ', () => 
 test('khóa đáp án của các nhiệm vụ tương tác không mơ hồ', () => {
   assert.equal(mission1Items.length, 8)
   assert.ok(mission1Items.every(([, category]) => ['program', 'device', 'data', 'interface', 'utility'].includes(category)))
+  const categoryKeys = mission1Categories.map(([key]) => key)
+  assert.ok(mission1Items.every(([, category]) => categoryKeys.includes(category)), 'Mọi đáp án của Trung tâm điều hành phải tồn tại trong danh sách lựa chọn')
+  assert.equal(new Set(mission1Items.map(([label]) => label)).size, 8, 'Các mục Trung tâm điều hành không được trùng')
+  assert.deepEqual(mission1Items, [
+    ['Phân chia thời gian CPU cho các chương trình đang chạy', 'program'],
+    ['Quản lí bộ nhớ chính (RAM) để hệ thống sử dụng', 'device'],
+    ['Tiếp nhận dữ liệu từ bàn phím', 'device'],
+    ['Tạo thư mục để tổ chức tệp', 'data'],
+    ['Nạp và tổ chức thực hiện một chương trình', 'program'],
+    ['Hiển thị cửa sổ, biểu tượng và con trỏ', 'interface'],
+    ['Tự động nhận biết máy in mới bằng Plug & Play', 'device'],
+    ['Nén nhiều tệp thành gói .zip', 'utility'],
+  ])
   assert.deepEqual(windowsTimeline, [
     ['Windows 1', '1985'], ['Windows 3', '1990'], ['Windows 95', '1995'], ['Windows XP', '2001'],
     ['Windows 7', '2009'], ['Windows 8', '2012'], ['Windows 10', '2015'], ['Windows 11', '2021'],
@@ -121,6 +135,14 @@ test('nội dung câu hỏi không còn dữ kiện ngoài tài liệu đã lo�
   assert.equal(/Dung lượng, quyền truy cập và mức cần thiết/i.test(combined), false, 'Không dùng đáp án ngoài phạm vi bài học')
 })
 
+test('Trung tâm điều hành chấm đủ 8 mục và chỉ quét trong đúng khu vực nhiệm vụ', async () => {
+  const appSource = await readFile(new URL('../assets/app.mjs', import.meta.url), 'utf8')
+  assert.match(appSource, /const matching = document\.querySelector\('#mission1Matching'\)/)
+  assert.match(appSource, /matching\.querySelectorAll\('select\[data-index\]'\)/)
+  assert.match(appSource, /score === items\.length/)
+  assert.match(appSource, /Đáp án đúng:/)
+})
+
 test('hoàn thành nhiệm vụ có luồng chuyển tiếp trực tiếp', async () => {
   const appSource = await readFile(new URL('../assets/app.mjs', import.meta.url), 'utf8')
   assert.match(appSource, /function showMissionCompleteFlow\(/)
@@ -128,4 +150,18 @@ test('hoàn thành nhiệm vụ có luồng chuyển tiếp trực tiếp', asyn
   assert.match(appSource, /Vào Boss Stage/)
   assert.match(appSource, /#\/mission\/\$\{nextMission\.id\}/)
   assert.match(appSource, /setTimeout\(\(\) => showMissionCompleteFlow/)
+})
+
+
+test('V7.4 dùng landing page từng chặng, dọn popup và cache busting', async () => {
+  const appSource = await readFile(new URL('../assets/app.mjs', import.meta.url), 'utf8')
+  const indexSource = await readFile(new URL('../index.html', import.meta.url), 'utf8')
+  const styleSource = await readFile(new URL('../assets/style.css', import.meta.url), 'utf8')
+  assert.match(appSource, /function renderMissionLanding\(/)
+  assert.match(appSource, /stage-landing-\$\{id\}/)
+  assert.match(appSource, /function cleanupTransientUi\(/)
+  assert.match(appSource, /overlay\.remove\(\)/)
+  assert.match(indexSource, /style\.css\?v=7\.4\.0/)
+  assert.match(indexSource, /app\.mjs\?v=7\.4\.0/)
+  assert.match(styleSource, /dashboard-hero-plus h1/)
 })

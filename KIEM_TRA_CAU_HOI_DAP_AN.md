@@ -1,4 +1,4 @@
-# KIỂM TRA CÂU HỎI VÀ ĐÁP ÁN — OS QUEST 11 V7.2
+# KIỂM TRA CÂU HỎI VÀ ĐÁP ÁN — OS QUEST 11 V7.3
 
 ## 1. Phạm vi kiểm tra
 
